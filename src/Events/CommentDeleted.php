@@ -1,8 +1,8 @@
 <?php
 
-namespace BeyondCode\Comments\Events;
+namespace AlexRegenbogen\CommentsRatingsReviews\Events;
 
-use BeyondCode\Comments\Comment;
+use AlexRegenbogen\CommentsRatingsReviews\Comment;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;

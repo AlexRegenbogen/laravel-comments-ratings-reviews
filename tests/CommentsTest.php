@@ -1,11 +1,11 @@
 <?php
 
-namespace BeyondCode\Comments\Tests;
+namespace AlexRegenbogen\CommentsRatingsReviews\Tests;
 
-use BeyondCode\Comments\Events\CommentAdded;
-use BeyondCode\Comments\Events\CommentDeleted;
-use BeyondCode\Comments\Tests\Models\ApprovedUser;
-use BeyondCode\Comments\Tests\Models\Post;
+use AlexRegenbogen\CommentsRatingsReviews\Events\CommentAdded;
+use AlexRegenbogen\CommentsRatingsReviews\Events\CommentDeleted;
+use AlexRegenbogen\CommentsRatingsReviews\Tests\Models\ApprovedUser;
+use AlexRegenbogen\CommentsRatingsReviews\Tests\Models\Post;
 use Illuminate\Foundation\Auth\User;
 use Illuminate\Support\Facades\Event;
 

@@ -6,14 +6,14 @@ use AlexRegenbogen\CommentsRatingsReviews\Contracts\Commentator;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
-trait HasComments
+trait HasReviews
 {
     /**
      * Return all comments for this model.
      *
      * @return MorphMany
      */
-    public function comments()
+    public function reviews()
     {
         return $this->morphMany(config('comments.comment_class'), 'commentable');
     }
@@ -23,9 +23,9 @@ trait HasComments
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function comment(string $comment)
+    public function review(string $review)
     {
-        return $this->commentAsUser(auth()->user(), $comment);
+        return $this->reviewAsUser(auth()->user(), $review);
     }
 
     /**
@@ -33,16 +33,16 @@ trait HasComments
      *
      * @return \Illuminate\Database\Eloquent\Model
      */
-    public function commentAsUser(?Model $user, string $comment)
+    public function reviewAsUser(?Model $user, string $review)
     {
-        $commentClass = config('comments.comment_class');
+        $reviewClass = config('comments.review_class');
 
-        $comment = new $commentClass([
-            'comment' => $comment,
-            'is_approved' => ($user instanceof Commentator) ? ! $user->needsCommentApproval($this) : false,
+        $review = new $reviewClass([
+            'review' => $review,
+            'is_approved' => ($user instanceof Reviewer) ? ! $user->needsReviewApproval($this) : false,
             'user_id' => is_null($user) ? null : $user->getKey(),
-            'commentable_id' => $this->getKey(),
-            'commentable_type' => get_class($this),
+            'reviewable_id' => $this->getKey(),
+            'reviewable_type' => get_class($this),
         ]);
 
         return $this->comments()->save($comment);

@@ -1,8 +1,8 @@
 <?php
 
-namespace BeyondCode\Comments\Tests;
+namespace AlexRegenbogen\CommentsRatingsReviews\Tests;
 
-use BeyondCode\Comments\CommentsServiceProvider;
+use AlexRegenbogen\CommentsRatingsReviews\CommentsRatingsReviewsServiceProvider;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Auth\User;
 
@@ -19,7 +19,7 @@ abstract class TestCase extends \Orchestra\Testbench\TestCase
     protected function getPackageProviders($app)
     {
         return [
-            CommentsServiceProvider::class,
+            CommentsRatingsReviewsServiceProvider::class,
         ];
     }
 
