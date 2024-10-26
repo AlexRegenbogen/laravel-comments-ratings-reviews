@@ -1,8 +1,8 @@
 <?php
 
-namespace BeyondCode\Comments\Tests\Models;
+namespace AlexRegenbogen\CommentsRatingsReviews\Tests\Models;
 
-use BeyondCode\Comments\Contracts\Commentator;
+use AlexRegenbogen\CommentsRatingsReviews\Contracts\Commentator;
 use Illuminate\Foundation\Auth\User;
 
 class ApprovedUser extends User implements Commentator

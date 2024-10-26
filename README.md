@@ -1,7 +1,4 @@
-# Add comments to your Laravel application
-
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/beyondcode/laravel-comments.svg?style=flat-square)](https://packagist.org/packages/beyondcode/laravel-comments)
-[![Total Downloads](https://img.shields.io/packagist/dt/beyondcode/laravel-comments.svg?style=flat-square)](https://packagist.org/packages/beyondcode/laravel-comments)
+# Add comments, reviews & ratings to your Laravel application
 
 Add the ability to associate comments to your Laravel Eloquent models. The comments can be approved and nested.
 
@@ -18,7 +15,7 @@ $post->commentAsUser($user, 'This is a comment from someone else');
 You can install the package via composer:
 
 ```bash
-composer require beyondcode/laravel-comments
+composer require alexregenbogen/laravel-comments-reviews-ratings
 ```
 
 The package will automatically register itself.
@@ -26,7 +23,7 @@ The package will automatically register itself.
 You can publish the migration with:
 
 ```bash
-php artisan vendor:publish --provider="BeyondCode\Comments\CommentsServiceProvider" --tag="migrations"
+php artisan vendor:publish --provider="AlexRegenbogen\CommentsRatingsReviews\CommentsRatingsReviewsServiceProvider" --tag="migrations"
 ```
 
 After the migration has been published you can create the media-table by running the migrations:
@@ -38,24 +35,25 @@ php artisan migrate
 You can publish the config-file with:
 
 ```bash
-php artisan vendor:publish --provider="BeyondCode\Comments\CommentsServiceProvider" --tag="config"
+php artisan vendor:publish --provider="AlexRegenbogen\CommentsRatingsReviews\CommentsRatingsReviewsServiceProvider" --tag="config"
 ```
 
 ## Usage
 
 ### Registering Models
 
-To let your models be able to receive comments, add the `HasComments` trait to the model classes.
+To let your models be able to receive comments, add the `HasComments`, `HasReviews` and/or `HasRatings` trait(s) to the model classes.
 
 ```php
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use BeyondCode\Comments\Traits\HasComments;
+use AlexRegenbogen\CommentsRatingsReviews\Traits\HasComments;
 
 class Post extends Model
 {
     use HasComments;
+    use HasRatings;
     ...
 }
 ```
@@ -101,7 +99,7 @@ If you want to automatically approve a comment for a specific user (and optional
 ```php
 namespace App\Models;
 
-use BeyondCode\Comments\Contracts\Commentator;
+use AlexRegenbogen\CommentsRatingsReviews\Contracts\Commentator;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable implements Commentator
@@ -139,21 +137,27 @@ $approved = $post->comments()->approved()->get();
 
 ### Nesting Comments
 
-`BeyondCode\Comments\Comment` itself implements the `HasComments` trait, so you can comment on a comment and therefore nest them:
+`AlexRegenbogen\CommentsRatingsReviews\Comment` itself implements the `HasComments` trait, so you can comment on a comment and therefore nest them:
 
 ```php
-$comment = BeyondCode\Comments\Comment::first();
+$comment = AlexRegenbogen\CommentsRatingsReviews\Comment::first();
 $comment->commentAsUser($user, "Hey there!");
 ```
 
 #### Deleting Replies
 
-When you delete a comment, you may optionally want to delete all its nested comments (replies). To optionally enable this feature, set the `delete_replies_along_comments` config property in the `config/comments.php` file to `true`.
+When you delete a comment/review/rating, you may optionally want to delete all its nested comments (replies). To optionally enable this feature, set the `delete_replies_along_comments` config property in the `config/comments.php` file to `true`.
 
 ### Events
 
-When a new comment is added the `BeyondCode\Comments\Events\CommentAdded` event will be dispatched.
-When a comment is deleted the `BeyondCode\Comments\Events\CommentDeleted` event will be dispatched.
+When a new comment is added the `AlexRegenbogen\CommentsRatingsReviews\Events\CommentAdded` event will be dispatched.
+When a comment is deleted the `AlexRegenbogen\CommentsRatingsReviews\Events\CommentDeleted` event will be dispatched.
+
+When a new review is added the `AlexRegenbogen\CommentsRatingsReviews\Events\ReviewAdded` event will be dispatched.
+When a review is deleted the `AlexRegenbogen\CommentsRatingsReviews\Events\ReviewDeleted` event will be dispatched.
+
+When a new rating is added the `AlexRegenbogen\CommentsRatingsReviews\Events\RatingAdded` event will be dispatched.
+When a rating is deleted the `AlexRegenbogen\CommentsRatingsReviews\Events\RatingDeleted` event will be dispatched.
 
 ### Testing
 
@@ -171,10 +175,12 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
 
-If you discover any security related issues, please email marcel@beyondco.de instead of using the issue tracker.
+If you discover any security related issues, please email github@relexed.com instead of using the issue tracker.
 
 ## Credits
+- [Alex Regenbogen](https://github.com/AlexRegenbogen) (Review and Rating features)
 
+Since this leans mostly on the work done by Marvel Pociot, a big thanks goes out to him, and the contributors of the original package.
 -   [Marcel Pociot](https://github.com/mpociot)
 -   [All Contributors](../../contributors)
 
