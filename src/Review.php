@@ -2,18 +2,18 @@
 
 namespace AlexRegenbogen\CommentsRatingsReviews;
 
-use AlexRegenbogen\CommentsRatingsReviews\Events\CommentAdded;
-use AlexRegenbogen\CommentsRatingsReviews\Events\CommentDeleted;
-use AlexRegenbogen\CommentsRatingsReviews\Traits\HasComments;
+use AlexRegenbogen\CommentsRatingsReviews\Events\ReviewAdded;
+use AlexRegenbogen\CommentsRatingsReviews\Events\ReviewDeleted;
+use AlexRegenbogen\CommentsRatingsReviews\Traits\HasReviews;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
+class Review extends Model
 {
-    use HasComments;
+    use HasReviews;
 
     protected $fillable = [
-        'comment',
+        'review',
         'user_id',
         'is_approved',
     ];
@@ -27,17 +27,17 @@ class Comment extends Model
         parent::boot();
 
         static::deleting(function (self $model) {
-            if (config('comments.delete_replies_along_comments')) {
+            if (config('comments.delete_replies_along_review')) {
                 $model->comments()->delete();
             }
         });
 
         static::deleted(function (self $model) {
-            CommentDeleted::dispatch($model);
+            ReviewDeleted::dispatch($model);
         });
 
         static::created(function (self $model) {
-            CommentAdded::dispatch($model);
+            ReviewAdded::dispatch($model);
         });
     }
 
@@ -80,10 +80,10 @@ class Comment extends Model
             return config('comments.user_model');
         }
 
-        if (! is_null(config('auth.providers.users.model'))) {
+        if (!is_null(config('auth.providers.users.model'))) {
             return config('auth.providers.users.model');
         }
 
-        throw new Exception('Could not determine the commentator model name.');
+        throw new Exception('Could not determine the reviewer model name.');
     }
 }

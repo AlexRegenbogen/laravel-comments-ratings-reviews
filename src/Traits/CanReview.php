@@ -2,14 +2,14 @@
 
 namespace AlexRegenbogen\CommentsRatingsReviews\Traits;
 
-trait CanComment
+trait CanReview
 {
     /**
      * Check if a comment for a specific model needs to be approved.
      *
      * @param  mixed  $model
      */
-    public function needsCommentApproval($model): bool
+    public function needsReviewApproval($model): bool
     {
         return true;
     }

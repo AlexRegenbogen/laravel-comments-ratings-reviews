@@ -2,18 +2,19 @@
 
 namespace AlexRegenbogen\CommentsRatingsReviews;
 
-use AlexRegenbogen\CommentsRatingsReviews\Events\CommentAdded;
-use AlexRegenbogen\CommentsRatingsReviews\Events\CommentDeleted;
+use AlexRegenbogen\CommentsRatingsReviews\Events\RatingAdded;
+use AlexRegenbogen\CommentsRatingsReviews\Events\RatingDeleted;
 use AlexRegenbogen\CommentsRatingsReviews\Traits\HasComments;
+use AlexRegenbogen\CommentsRatingsReviews\Traits\HasRatings;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
+class Rating extends Model
 {
-    use HasComments;
+    use HasRatings;
 
     protected $fillable = [
-        'comment',
+        'rating',
         'user_id',
         'is_approved',
     ];
@@ -27,17 +28,17 @@ class Comment extends Model
         parent::boot();
 
         static::deleting(function (self $model) {
-            if (config('comments.delete_replies_along_comments')) {
-                $model->comments()->delete();
+            if (config('comments.delete_replies_along_rating')) {
+                $model->ratings()->delete();
             }
         });
 
         static::deleted(function (self $model) {
-            CommentDeleted::dispatch($model);
+            RatingDeleted::dispatch($model);
         });
 
         static::created(function (self $model) {
-            CommentAdded::dispatch($model);
+            RatingAdded::dispatch($model);
         });
     }
 
@@ -46,12 +47,12 @@ class Comment extends Model
         return $query->where('is_approved', true);
     }
 
-    public function commentable()
+    public function rateable()
     {
         return $this->morphTo();
     }
 
-    public function commentator()
+    public function rater()
     {
         return $this->belongsTo($this->getAuthModelName(), 'user_id');
     }
@@ -84,6 +85,6 @@ class Comment extends Model
             return config('auth.providers.users.model');
         }
 
-        throw new Exception('Could not determine the commentator model name.');
+        throw new Exception('Could not determine the rater model name.');
     }
 }

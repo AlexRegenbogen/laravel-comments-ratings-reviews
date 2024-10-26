@@ -2,12 +2,12 @@
 
 namespace AlexRegenbogen\CommentsRatingsReviews\Contracts;
 
-interface Commentator
+interface Reviewer
 {
     /**
      * Check if a comment for a specific model needs to be approved.
      *
      * @param  mixed  $model
      */
-    public function needsCommentApproval($model): bool;
+    public function needsReviewApproval($model): bool;
 }
