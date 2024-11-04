@@ -1,8 +1,9 @@
 <?php
 
-namespace BeyondCode\Comments\Traits;
+namespace AlexRegenbogen\CommentsRatingsReviews\Traits;
 
-use BeyondCode\Comments\Contracts\Commentator;
+use AlexRegenbogen\CommentsRatingsReviews\Contracts\Commentator;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 
@@ -15,7 +16,15 @@ trait HasComments
      */
     public function comments()
     {
-        return $this->morphMany(config('comments.comment_class'), 'commentable');
+        return $this->morphMany(config('comments_ratings_reviews.comment_class'), 'commentable');
+    }
+
+    public function getComments(): Collection
+    {
+        /** @var Collection<int, Comment> $res */
+        $res = $this->getRelationValue('comments');
+
+        return $res;
     }
 
     /**
@@ -35,7 +44,7 @@ trait HasComments
      */
     public function commentAsUser(?Model $user, string $comment)
     {
-        $commentClass = config('comments.comment_class');
+        $commentClass = config('comments_ratings_reviews.comment_class');
 
         $comment = new $commentClass([
             'comment' => $comment,

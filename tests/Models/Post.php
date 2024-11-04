@@ -1,8 +1,8 @@
 <?php
 
-namespace BeyondCode\Comments\Tests\Models;
+namespace AlexRegenbogen\CommentsRatingsReviews\Tests\Models;
 
-use BeyondCode\Comments\Traits\HasComments;
+use AlexRegenbogen\CommentsRatingsReviews\Traits\HasComments;
 use Illuminate\Database\Eloquent\Model;
 
 class Post extends Model

@@ -1,19 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AlexRegenbogen\CommentsRatingsReviews;
 
-use AlexRegenbogen\CommentsRatingsReviews\Events\CommentAdded;
-use AlexRegenbogen\CommentsRatingsReviews\Events\CommentDeleted;
-use AlexRegenbogen\CommentsRatingsReviews\Traits\HasComments;
-use Exception;
+use AlexRegenbogen\CommentsRatingsReviews\Events\ReviewAdded;
+use AlexRegenbogen\CommentsRatingsReviews\Events\ReviewDeleted;
+use AlexRegenbogen\CommentsRatingsReviews\Traits\HasReviews;
 use Illuminate\Database\Eloquent\Model;
 
-class Comment extends Model
+class Review extends Model
 {
-    use HasComments;
+    use HasReviews;
 
     protected $fillable = [
-        'comment',
+        'review',
         'user_id',
         'is_approved',
     ];
@@ -26,18 +27,18 @@ class Comment extends Model
     {
         parent::boot();
 
-        static::deleting(function (self $model) {
-            if (config('comments.delete_replies_along_comments')) {
+        static::deleting(function (self $model): void {
+            if (config('comments.delete_replies_along_review')) {
                 $model->comments()->delete();
             }
         });
 
-        static::deleted(function (self $model) {
-            CommentDeleted::dispatch($model);
+        static::deleted(function (self $model): void {
+            ReviewDeleted::dispatch($model);
         });
 
-        static::created(function (self $model) {
-            CommentAdded::dispatch($model);
+        static::created(function (self $model): void {
+            ReviewAdded::dispatch($model);
         });
     }
 
@@ -46,12 +47,12 @@ class Comment extends Model
         return $query->where('is_approved', true);
     }
 
-    public function commentable()
+    public function reviewable()
     {
         return $this->morphTo();
     }
 
-    public function commentator()
+    public function reviewer()
     {
         return $this->belongsTo($this->getAuthModelName(), 'user_id');
     }
@@ -80,10 +81,10 @@ class Comment extends Model
             return config('comments.user_model');
         }
 
-        if (! is_null(config('auth.providers.users.model'))) {
+        if (null !== config('auth.providers.users.model')) {
             return config('auth.providers.users.model');
         }
 
-        throw new Exception('Could not determine the commentator model name.');
+        throw new \Exception('Could not determine the reviewer model name.');
     }
 }
