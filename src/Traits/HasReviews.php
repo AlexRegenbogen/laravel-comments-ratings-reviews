@@ -35,9 +35,9 @@ trait HasReviews
      *
      * @return Model
      */
-    public function review(string $review)
+    public function review(string $title, string $review)
     {
-        return $this->reviewAsUser(auth()->user(), $review);
+        return $this->reviewAsUser(auth()->user(), $title, $review);
     }
 
     /**
@@ -45,11 +45,12 @@ trait HasReviews
      *
      * @return Model
      */
-    public function reviewAsUser(?Model $user, string $review)
+    public function reviewAsUser(?Model $user, string $title, string $review)
     {
         $reviewClass = config('comments_ratings_reviews.review_class');
 
         $review = new $reviewClass([
+            'title' => $title,
             'review' => $review,
             'is_approved' => ($user instanceof Reviewer) ? ! $user->needsReviewApproval($this) : false,
             'user_id' => null === $user ? null : $user->getKey(),

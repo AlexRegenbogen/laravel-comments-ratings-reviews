@@ -14,6 +14,7 @@ class Review extends Model
     use HasReviews;
 
     protected $fillable = [
+        'title',
         'review',
         'user_id',
         'is_approved',
